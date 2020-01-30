@@ -1,5 +1,6 @@
-# adapted from makefile by Prof. Phillip Colella
+# adapted from makefile by Prof. Phillip Colella (UC Berkeley)
 # 27 Sept. 2018
+
 
 
 # compiler flags
@@ -7,11 +8,9 @@ CXX = g++
 CFLAGS =  -O3
 CFLAGS += -std=c++11
 
-
 # directories for object and dependency files
 odir = ./dirO
 ddir = ./dirD
-
 
 # find all source files, generate names of objects and dependencies
 SRCFILES := $(notdir $(wildcard ./*.cpp))
@@ -25,10 +24,9 @@ $(odir)/%.o:%.cpp GNUmakefile
 
 -include $(DEPS)
 
-
+# clean
 clean:
 	rm -r *.exe $(odir) $(ddir)
-
 
 # useful tools
 listsrc:
@@ -37,5 +35,10 @@ listobj:
 	@echo $(OBJS)
 listdep:
 	@echo $(DEPS)
+
+
+# recipe for main method
+main: GNUmakefile $(OBJS) 
+	$(CXX) $(CFLAGS) $(CALCFLAGS) $(OBJS) -o activeContact.exe
 
 
