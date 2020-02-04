@@ -10,6 +10,7 @@ using namespace std;
 
 // functions and descriptions provided below
 
+void   checkParams();
 double calcOmega(double k);
 double calcPassiveAnalyticalResult(double k);
 double calcPassiveAveragedAnalyticalResult(double k);
@@ -26,9 +27,11 @@ double calcActivePressureFactor();
 int main(int argc, char** argv)
 {
 
+	// check that parameters are consistent
+	checkParams();
+
 
 	/* *** create data containers *** */
-	
 
 	// simulated height (active)
 	vector< vector<double> >
@@ -254,12 +257,12 @@ int main(int argc, char** argv)
 							// the exponential prefactor of the
 							// exponential
 							double active_pressure
-								= phi * p_bar * M_PI * pow(GAUSSIAN_LENGTH,2.) *
+								= phi * p_bar * M_PI * pow(PARTICLE_RADIUS,2.) *
 								delta_t / 2. / VISCOSITY / k / LENGTH;
 
 							// multiply with the exponential
 							active_pressure *=
-								exp(-0.5 * pow(GAUSSIAN_LENGTH, 2) * k * k);
+								exp(-0.5 * pow(PARTICLE_RADIUS, 2) * k * k);
 
 
 
@@ -426,6 +429,22 @@ int main(int argc, char** argv)
 
 
 /**
+ * determine if the various parameter
+ * values in params.h are consistent
+ *
+ */
+void checkParams() {
+
+	// length = 2 * pi * R
+	assert(abs((2.*M_PI*VESICLE_RADIUS - LENGTH)/LENGTH < EPSILON));
+
+	// time to traverse vesicle = vesicle radius / particle speed
+	assert(abs((TRAVERSAL_TIME - 2.*VESICLE_RADIUS/PARTICLE_SPEED)/PARTICLE_SPEED < EPSILON));
+}
+
+
+
+/**
  * calculate omega(k), in units of 1/us,
  * for k in units of 1/nm
  *
@@ -483,7 +502,7 @@ double calcAnalyticalResult(double k) {
 	double p_bar = calcActivePressureFactor();
 
 	double temp = NUM_PARTICLES * TAU_R / (TAU_R + TRAVERSAL_TIME);
-	temp *= pow(pow(GAUSSIAN_LENGTH, 2.0) * p_bar / VESICLE_RADIUS * passive / KBT, 2.0);
+	temp *= pow(pow(PARTICLE_RADIUS, 2.0) * p_bar / VESICLE_RADIUS * passive / KBT, 2.0);
 	temp *= exp(-k*k*pow(PARTICLE_RADIUS,2.));
 
 	return passive + temp;
@@ -536,7 +555,7 @@ double calcActiveTimeFactor(
 double calcActivePressureFactor() {
 
 	double p_bar;
-	p_bar = 2 * LAMBDA / GAUSSIAN_LENGTH;
+	p_bar = 2 * LAMBDA / PARTICLE_RADIUS;
 	return p_bar;
 
 }
