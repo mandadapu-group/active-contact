@@ -1,7 +1,6 @@
 # Active Membrane Contact
 
-to run:
-1. go to the exec/ folder
-2. type ```make main```
-3. run the executable file ```activeContact.exe```
+to run (assuming a Unix-based shell):
+1. type ```make main```
+2. run the executable file ```activeContact.exe```
 
